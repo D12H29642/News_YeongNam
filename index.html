@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>뇌와 컴퓨터를 잇는 사람들 — BCI 연구자 인터뷰</title>
+<meta name="description" content="BCI 연구실의 대학원생 3인에게 ‘연구자의 길’을 묻다 — 과학신문 진로 인터뷰">
+<meta property="og:title" content="뇌와 컴퓨터를 잇는 사람들">
+<meta property="og:description" content="BCI 연구실의 대학원생 3인에게 ‘연구자의 길’을 묻다">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14171c;--text:#ebe8de;--soft:#c6c2b6;--muted:#8c887c;
+    --gold:#e0b43f;--teal:#7cc4bd;--amber:#e4a94a;--rose:#e8988a;
+    --line:rgba(255,255,255,.13);
+    --sans:"Noto Sans KR",system-ui,sans-serif;--serif:"Noto Serif KR",serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{background:var(--ink);min-height:100vh;}
+
+  /* Switch bar */
+  .switch{position:sticky;top:0;z-index:30;display:flex;justify-content:center;padding:.85rem 1rem;
+    background:rgba(20,23,28,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .seg{display:inline-flex;background:#242831;border:1px solid var(--line);border-radius:100px;padding:.26rem;}
+  .seg button{font-family:var(--sans);font-size:.9rem;font-weight:700;color:var(--soft);background:none;border:0;
+    padding:.5rem 1.4rem;border-radius:100px;cursor:pointer;transition:background .15s,color .15s;}
+  .seg button.active{background:var(--gold);color:#14171c;}
+  .view.hidden{display:none;}
+
+  /* ===== DOCUMENT VIEW ===== */
+  #doc-view{background:var(--ink);color:var(--text);font-family:var(--serif);line-height:1.92;font-size:17px;word-break:keep-all;-webkit-font-smoothing:antialiased;}
+  #doc-view .wrap{max-width:44rem;margin:0 auto;padding:clamp(1.8rem,4vw,3.4rem) clamp(1.1rem,4.5vw,2rem) 3.4rem;}
+  #doc-view .cover-art{text-align:center;margin:.3rem 0 1.8rem;}
+  #doc-view .cover-art svg{width:clamp(180px,55%,240px);height:auto;}
+  #doc-view .kicker{font-family:var(--sans);font-weight:700;font-size:.74rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;text-align:center;margin-bottom:1rem;}
+  #doc-view h1{font-family:var(--sans);font-weight:900;font-size:clamp(2.2rem,7.5vw,3.1rem);line-height:1.22;letter-spacing:-1.4px;text-align:center;margin-bottom:.8rem;}
+  #doc-view .subhead{text-align:center;font-size:clamp(1.04rem,3.2vw,1.2rem);font-weight:500;color:var(--soft);line-height:1.6;margin-bottom:1.3rem;}
+  #doc-view .byline{font-family:var(--sans);text-align:center;font-size:.86rem;font-weight:500;color:var(--gold);}
+  #doc-view .rule{border:0;border-top:1px solid var(--line);margin:2rem 0;}
+  #doc-view .rule.gold{border-top:2px solid rgba(224,180,63,.55);}
+  #doc-view p{margin:0 0 1.3rem;color:var(--soft);}
+  #doc-view .lead{font-size:clamp(1.08rem,3vw,1.22rem);line-height:1.84;color:var(--text);}
+  #doc-view .people{margin:2.2rem 0;padding:1.4rem 1.6rem .6rem;background:#efe9db;color:#23201a;border-radius:6px;border-top:3px solid var(--gold);}
+  #doc-view .people h2{font-family:var(--sans);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#9a2b1e;margin-bottom:.9rem;}
+  #doc-view .people ul{list-style:none;}
+  #doc-view .people li{padding:.6rem 0;border-top:1px solid #d8d0bf;font-size:.98rem;line-height:1.5;color:#2a2620;}
+  #doc-view .people li:first-child{border-top:0;}
+  #doc-view .people b{font-weight:700;}
+  #doc-view .people .aff{color:#726d60;}
+  #doc-view section{margin-top:2.8rem;padding-top:1.7rem;border-top:1px solid var(--line);}
+  #doc-view section h2.sec{font-family:var(--sans);font-weight:900;font-size:clamp(1.4rem,4.4vw,1.72rem);line-height:1.34;letter-spacing:-.6px;color:var(--text);margin-bottom:1.3rem;}
+  #doc-view h2.sec .tag{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.06em;padding:.3em .8em;border-radius:100px;margin-right:.65em;vertical-align:middle;transform:translateY(-.14em);}
+  #doc-view .hada h2.sec .tag{background:var(--teal);color:#0c322e;}
+  #doc-view .junbi h2.sec .tag{background:var(--amber);color:#5a3607;}
+  #doc-view .gyegi h2.sec .tag{background:var(--rose);color:#5e1512;}
+  #doc-view .hada{border-top-color:rgba(124,196,189,.4);}
+  #doc-view .junbi{border-top-color:rgba(228,169,74,.4);}
+  #doc-view .gyegi{border-top-color:rgba(232,152,138,.4);}
+  #doc-view .pull{margin:2.1rem 0;padding:.3rem 0 .3rem 1.4rem;border-left:3px solid var(--teal);font-size:clamp(1.18rem,3.5vw,1.46rem);font-weight:600;line-height:1.5;color:var(--text);letter-spacing:-.4px;}
+  #doc-view .note-foot{margin-top:3.2rem;padding-top:1.3rem;border-top:1px solid var(--line);font-family:var(--sans);font-size:.82rem;color:var(--muted);line-height:1.7;}
+
+  /* ===== CARDNEWS VIEW ===== */
+  #cards-view{background:#d9d6cd;color:#1a1a1a;font-family:var(--sans);word-break:keep-all;-webkit-font-smoothing:antialiased;padding:clamp(1.4rem,4vw,2.5rem) 1rem 3rem;}
+  #cards-view .deck{max-width:430px;margin:0 auto;display:flex;flex-direction:column;gap:1.4rem;}
+  #cards-view .card{position:relative;aspect-ratio:4/5;width:100%;border-radius:22px;overflow:hidden;padding:clamp(1.6rem,6vw,2.2rem);display:flex;flex-direction:column;box-shadow:0 10px 30px rgba(0,0,0,.18);}
+  #cards-view .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;}
+  #cards-view .tag{padding:.32em .85em;border-radius:100px;font-size:.72rem;font-weight:700;letter-spacing:.02em;}
+  #cards-view .pg{font-size:.74rem;font-weight:700;opacity:.5;font-variant-numeric:tabular-nums;}
+  #cards-view .card-body{flex:1;display:flex;flex-direction:column;justify-content:center;}
+  #cards-view .hl{font-weight:900;font-size:clamp(1.25rem,4.6vw,1.5rem);line-height:1.32;letter-spacing:-.6px;margin-bottom:.9rem;}
+  #cards-view .bd{font-size:clamp(.95rem,2.9vw,1.02rem);font-weight:500;line-height:1.72;}
+  #cards-view .card-foot{font-size:.72rem;font-weight:500;letter-spacing:.03em;opacity:.55;margin-top:.5rem;}
+  #cards-view .card--cover{background:#14171c;color:#f4f2ea;justify-content:space-between;}
+  #cards-view .card--cover .kick{font-size:.76rem;font-weight:700;letter-spacing:.2em;color:#e0b43f;text-transform:uppercase;}
+  #cards-view .cover-mid{display:flex;flex-direction:column;align-items:flex-start;}
+  #cards-view .cover-art{width:100%;margin-bottom:1.2rem;}
+  #cards-view .cover-art svg{display:block;width:clamp(140px,52%,196px);height:auto;}
+  #cards-view .card--cover .bar{width:44px;height:4px;background:#e0b43f;border-radius:4px;margin-bottom:.95rem;}
+  #cards-view .card--cover .title{font-weight:900;font-size:clamp(2.05rem,8.6vw,2.7rem);line-height:1.18;letter-spacing:-1.4px;}
+  #cards-view .card--cover .sub{margin-top:.85rem;font-size:clamp(.96rem,3.6vw,1.1rem);font-weight:500;line-height:1.58;color:#c7c3b7;}
+  #cards-view .card--cover .by{font-size:.86rem;font-weight:500;color:#e0b43f;}
+  #cards-view .card--lead{background:#f4efe3;color:#23201a;}
+  #cards-view .card--lead .tag{background:#14171c;color:#f0b63d;}
+  #cards-view .card--lead .bd{font-size:clamp(1rem,3vw,1.08rem);line-height:1.8;}
+  #cards-view .card--people{background:#efe9db;color:#1f1d18;}
+  #cards-view .card--people .tag{background:#14171c;color:#f0b63d;}
+  #cards-view .plist{list-style:none;}
+  #cards-view .plist li{padding:.9rem 0;border-top:1.5px solid #d6cdba;}
+  #cards-view .plist li:first-child{border-top:0;}
+  #cards-view .pn{font-weight:900;font-size:1.4rem;letter-spacing:-.5px;}
+  #cards-view .pa{display:block;margin-top:.1rem;font-size:.9rem;font-weight:500;color:#736f62;}
+  #cards-view .card--people .note{font-size:.88rem;font-weight:500;color:#8a8475;}
+  #cards-view .card--hada{background:#114a45;color:#eef3ef;}
+  #cards-view .card--hada .tag{background:#7cc4bd;color:#0c322e;}
+  #cards-view .card--hada .hl{color:#fff;}
+  #cards-view .card--hada .bd{color:#cfe0db;}
+  #cards-view .card--hada .card-top .pg,#cards-view .card--hada .card-foot{color:#9fc3bc;}
+  #cards-view .card--junbi{background:#a85c17;color:#fdf4e7;}
+  #cards-view .card--junbi .tag{background:#f6d79a;color:#6e3c0c;}
+  #cards-view .card--junbi .bd{color:#f4e6ce;}
+  #cards-view .card--junbi .card-top .pg,#cards-view .card--junbi .card-foot{color:#edc99a;}
+  #cards-view .card--gyegi{background:#871c1c;color:#fbe9e4;}
+  #cards-view .card--gyegi .tag{background:#f0b9ac;color:#5e1212;}
+  #cards-view .card--gyegi .bd{color:#f1d4cc;}
+  #cards-view .card--gyegi .card-top .pg,#cards-view .card--gyegi .card-foot{color:#e2a99d;}
+  #cards-view .card--outro{background:#14171c;color:#f4f2ea;text-align:center;}
+  #cards-view .card--outro .card-body{align-items:center;}
+  #cards-view .card--outro .bar{width:44px;height:4px;background:#e0b43f;border-radius:4px;margin:0 auto 1.2rem;}
+  #cards-view .card--outro .bd{color:#c7c3b7;max-width:19rem;}
+  #cards-view .card--outro .cred{margin-top:1.6rem;font-size:.84rem;color:#e0b43f;font-weight:500;}
+
+  /* Global footer credit */
+  .made{background:var(--ink);color:var(--muted);text-align:center;font-family:var(--sans);font-size:.8rem;letter-spacing:.01em;padding:1.7rem 1rem;border-top:1px solid var(--line);}
+
+  @media(max-width:420px){#doc-view{font-size:16px;}}
+</style>
+</head>
+<body>
+
+  <nav class="switch">
+    <div class="seg">
+      <button id="btn-doc" class="active" onclick="showView('doc')">문서</button>
+      <button id="btn-cards" onclick="showView('cards')">카드뉴스</button>
+    </div>
+  </nav>
+
+  <!-- ================= DOCUMENT ================= -->
+  <section id="doc-view" class="view">
+    <div class="wrap">
+      <div class="cover-art">
+        <svg viewBox="0 0 206 112" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="뇌 뉴런 네트워크에서 컴퓨터 칩으로 신호가 이어지는 BCI 개념 일러스트">
+          <g stroke="#e0b43f" stroke-width="1.3" opacity="0.5" stroke-linecap="round">
+            <line x1="34" y1="34" x2="58" y2="24"/><line x1="58" y1="24" x2="82" y2="32"/><line x1="82" y1="32" x2="98" y2="50"/><line x1="34" y1="34" x2="26" y2="56"/><line x1="34" y1="34" x2="52" y2="50"/><line x1="58" y1="24" x2="52" y2="50"/><line x1="82" y1="32" x2="78" y2="56"/><line x1="98" y1="50" x2="78" y2="56"/><line x1="26" y1="56" x2="52" y2="50"/><line x1="52" y1="50" x2="78" y2="56"/><line x1="26" y1="56" x2="38" y2="80"/><line x1="52" y1="50" x2="62" y2="80"/><line x1="78" y1="56" x2="86" y2="72"/><line x1="38" y1="80" x2="62" y2="80"/><line x1="62" y1="80" x2="86" y2="72"/><line x1="98" y1="50" x2="86" y2="72"/>
+          </g>
+          <g stroke="#7cc4bd" stroke-width="1.8" opacity="0.9" stroke-linecap="round">
+            <line x1="98" y1="50" x2="150" y2="56"/><line x1="78" y1="56" x2="150" y2="70"/><line x1="86" y1="72" x2="150" y2="84"/>
+          </g>
+          <g fill="#e0b43f"><circle cx="34" cy="34" r="3"/><circle cx="58" cy="24" r="3"/><circle cx="82" cy="32" r="3"/><circle cx="26" cy="56" r="3"/><circle cx="52" cy="50" r="3"/><circle cx="38" cy="80" r="3"/><circle cx="62" cy="80" r="3"/></g>
+          <g fill="#7cc4bd"><circle cx="98" cy="50" r="3.4"/><circle cx="78" cy="56" r="3.4"/><circle cx="86" cy="72" r="3.4"/><circle cx="150" cy="56" r="2.6"/><circle cx="150" cy="70" r="2.6"/><circle cx="150" cy="84" r="2.6"/></g>
+          <rect x="150" y="40" width="44" height="48" rx="7" fill="none" stroke="#e0b43f" stroke-width="2"/>
+          <rect x="160" y="52" width="24" height="24" rx="3" fill="none" stroke="#e0b43f" stroke-width="1.3" opacity="0.6"/>
+          <g stroke="#e0b43f" stroke-width="2" stroke-linecap="round"><line x1="194" y1="56" x2="201" y2="56"/><line x1="194" y1="70" x2="201" y2="70"/><line x1="194" y1="84" x2="201" y2="84"/></g>
+        </svg>
+      </div>
+
+      <p class="kicker">과학신문 · 진로 인터뷰</p>
+      <h1>뇌와 컴퓨터를 잇는 사람들</h1>
+      <p class="subhead">BCI 연구실의 대학원생 3인에게 ‘연구자의 길’을 묻다</p>
+      <p class="byline">신겸재 · 류현우 기자</p>
+
+      <hr class="rule gold">
+
+      <p class="lead">“뇌로 기계를 움직인다.” 공상과학 영화에서나 보던 장면이 지금 국내 대학 연구실에서 현실이 되고 있다. 뇌-컴퓨터 인터페이스(BCI)는 뇌의 전기 신호를 읽어 컴퓨터나 기계를 제어하고, 거꾸로 뇌에 신호를 전달하는 기술이다.</p>
+      <p>연구직을 꿈꾸는 학우들을 위해 BCI 연구실의 세 대학원생의 이야기를 전한다.</p>
+
+      <aside class="people">
+        <h2>만난 사람들</h2>
+        <ul>
+          <li><b>심○○</b> <span class="aff">— UNIST 바이오메디컬공학과</span></li>
+          <li><b>허○○</b> <span class="aff">— 고려대학교 뇌공학과</span></li>
+          <li><b>이○○</b> <span class="aff">— UNIST 바이오메디컬공학과</span></li>
+        </ul>
+      </aside>
+
+      <section class="hada">
+        <h2 class="sec"><span class="tag">하루</span>연구실의 하루는 ‘실험’이 아니었다</h2>
+        <p>세 연구자에게 먼저 연구자의 하루를 물었다. 이○○ 대학원생은 “BCI 연구라고 해서 매일 뇌 신호를 기록하거나 실험하는 것만은 아니다”라며 동료와 논의하는 시간도 많다고 했다.</p>
+        <p>구체적으로 들여다보면 하루는 더 ‘손에 잡히는’ 일로 채워진다. 심○○ 대학원생은 실험이 필요하면 장비부터 직접 만든다. 필요한 하드웨어를 사서 납땜으로 회로를 잇고, 구동이 되는지 확인한 뒤, 코딩으로 기능을 구현한다. 뇌 신호를 다루기 전에 그 신호를 얻을 장치부터 만드는 일이 하루의 큰 부분을 차지한다. 데이터를 구하는 일도 간단치 않다. 허○○ 대학원생에 따르면 연구실은 실험으로 데이터를 모으는 ‘웻랩’과 컴퓨터로 분석하는 ‘드라이랩’으로 나뉘는데, 특히 직접 실험을 하지 않는 드라이랩에서는 개인이 데이터를 확보하기 어려워, 공개 데이터를 쓰거나 지도교수가 수주한 과제, 외부에서 의뢰받은 분석을 통해 데이터를 얻는 경우가 많다.</p>
+        <blockquote class="pull">뇌 신호를 다루기 전에, 그 신호를 얻을 장치부터 만든다.</blockquote>
+        <p>심○○ 대학원생은 상상과 가장 달랐던 점으로 ‘스스로 공부하는 방식’을 꼽았다. 교재나 선생님 없이, 전 세계에서 조금씩 쌓이는 논문을 스스로 정리하고 아직 밝혀지지 않은 부분을 찾아 검증하는 것이 연구라는 얘기다. 허○○ 대학원생은 대학원 생활이 개인 연구만이 아니라 지도교수가 수주한 연구과제와 연구실 운영까지 포함되며, 실제로는 지도교수의 관심 분야를 주로 연구하게 된다는 점이 예상과 다르다고 짚었다.</p>
+      </section>
+
+      <section class="junbi">
+        <h2 class="sec"><span class="tag">준비</span>BCI, 어떤 전공으로 준비할까</h2>
+        <p>세 연구자는 한목소리로 ‘BCI에 정해진 하나의 전공은 없다’고 답했다. 뇌 신호를 분석하는 인공지능 쪽에 끌리면 컴퓨터공학, 전기전자공학이, 뇌의 작동 원리에 끌리면 뇌과학, 생명과학이 출발점이 될 수 있다. 허○○ 대학원생은 KAIST, DGIST처럼 뇌공학 관련 학부로 진학하거나 생명공학을 거쳐 컴퓨터공학을 복수전공하는 길을 추천하면서도, ‘전혀 다른 분야에서 넘어오는 사람도 많으니 학부 전공에 너무 얽매일 필요는 없다’고 했다.</p>
+        <p>공통적으로 강조된 기초 체력은 신호처리, 프로그래밍, 수학·통계, 그리고 뇌·신경계 기초였다. 고등학생에게는 학교 수학·과학을 충실히 하면서 가능하면 파이썬으로 데이터를 다루고 그래프를 그려 보는 것부터 시작하라고 권했다. 심○○ 대학원생은 관심 있는 연구를 하는 교수를 논문으로 먼저 찾아보라고 조언했고, 허○○ 대학원생은 ‘인공지능이 코딩, 분석을 잘해도 연구에는 사람의 검증이 필수’라며 미래의 연구 환경을 스스로 고민해 보라고 당부했다.</p>
+      </section>
+
+      <section class="gyegi">
+        <h2 class="sec"><span class="tag">계기</span>연구자가 된 이유, 가장 즐거운 순간</h2>
+        <p>세 사람이 연구자의 길로 들어선 계기는 거창하지 않았다. 심○○ 대학원생은 어릴 때부터 연구를, 특히 BCI를 직접 만들어 보고 싶었고, 그것을 마냥 기다리기엔 너무 오래 걸릴 것 같아 직접 뛰어들었다고 했다. 이○○ 대학원생은 처음부터 대학원을 목표한 것은 아니었다고 말한다. 다만 뇌가 어떻게 작동하는지, 우리가 생각하는 과정과 실제 뇌의 활동이 어떻게 연결되는지, 그 관계를 우리가 이해할 수 있는 방식으로 표현할 수 있는지가 어릴 때부터 궁금했고, BCI 연구실 인턴을 거치며 흥미를 키워 진학을 택했다.</p>
+        <p>가장 즐거운 순간으로는 ‘가설이 현실이 되는 장면’이 공통으로 꼽혔다. 이○○ 대학원생은 자신이 세운 가설을 뒷받침하는 결과를 데이터 분석에서 발견했을 때, 또 여러 분석 결과를 연결해 연구 질문에 논리적으로 답할 수 있게 되었을 때를 꼽았다. 심○○ 대학원생은 전기 자극으로 손에 원하는 촉감을 만들어 내는 자신의 연구를 VR로 확인하거나 직접 구현하면서, 상상만 하던 연구가 실제로 가능해지고, 뭔가 되어 간다는 것을 눈으로 확인할 때가 즐겁다고 했다.</p>
+        <p>허○○ 대학원생은 특별한 계기는 없었지만 연구가 잘 진행되어 좋은 결과가 나올 때 보람을 느낀다고 담담하게 답했다. 그는 BCI가 아직 개척할 부분이 많은 유망한 분야이지만, 상용화의 핵심인 비침습 뇌파는 두개골과 두피를 지나며 정보가 손실돼 기술적으로 풀어야 할 과제가 많다는 점도 지적했다. 그러면서 BCI에 관심이 생겼다면 관련 기술이 실제로 어느 정도 수준에 와 있는지 먼저 찾아보라고 권했다.</p>
+      </section>
+
+      <p class="note-foot">세 연구자와의 이메일 인터뷰를 바탕으로 작성했습니다. · 인터뷰이의 요청과 개인정보 보호를 위해 이름은 익명 처리했습니다.</p>
+    </div>
+  </section>
+
+  <!-- ================= CARDNEWS ================= -->
+  <section id="cards-view" class="view hidden">
+    <div class="deck">
+
+      <div class="card card--cover">
+        <p class="kick">과학신문 · 진로 인터뷰</p>
+        <div class="cover-mid">
+          <div class="cover-art">
+            <svg viewBox="0 0 206 112" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="뇌 뉴런 네트워크에서 컴퓨터 칩으로 신호가 이어지는 BCI 개념 일러스트">
+              <g stroke="#e0b43f" stroke-width="1.3" opacity="0.5" stroke-linecap="round"><line x1="34" y1="34" x2="58" y2="24"/><line x1="58" y1="24" x2="82" y2="32"/><line x1="82" y1="32" x2="98" y2="50"/><line x1="34" y1="34" x2="26" y2="56"/><line x1="34" y1="34" x2="52" y2="50"/><line x1="58" y1="24" x2="52" y2="50"/><line x1="82" y1="32" x2="78" y2="56"/><line x1="98" y1="50" x2="78" y2="56"/><line x1="26" y1="56" x2="52" y2="50"/><line x1="52" y1="50" x2="78" y2="56"/><line x1="26" y1="56" x2="38" y2="80"/><line x1="52" y1="50" x2="62" y2="80"/><line x1="78" y1="56" x2="86" y2="72"/><line x1="38" y1="80" x2="62" y2="80"/><line x1="62" y1="80" x2="86" y2="72"/><line x1="98" y1="50" x2="86" y2="72"/></g>
+              <g stroke="#7cc4bd" stroke-width="1.8" opacity="0.9" stroke-linecap="round"><line x1="98" y1="50" x2="150" y2="56"/><line x1="78" y1="56" x2="150" y2="70"/><line x1="86" y1="72" x2="150" y2="84"/></g>
+              <g fill="#e0b43f"><circle cx="34" cy="34" r="3"/><circle cx="58" cy="24" r="3"/><circle cx="82" cy="32" r="3"/><circle cx="26" cy="56" r="3"/><circle cx="52" cy="50" r="3"/><circle cx="38" cy="80" r="3"/><circle cx="62" cy="80" r="3"/></g>
+              <g fill="#7cc4bd"><circle cx="98" cy="50" r="3.4"/><circle cx="78" cy="56" r="3.4"/><circle cx="86" cy="72" r="3.4"/><circle cx="150" cy="56" r="2.6"/><circle cx="150" cy="70" r="2.6"/><circle cx="150" cy="84" r="2.6"/></g>
+              <rect x="150" y="40" width="44" height="48" rx="7" fill="none" stroke="#e0b43f" stroke-width="2"/>
+              <rect x="160" y="52" width="24" height="24" rx="3" fill="none" stroke="#e0b43f" stroke-width="1.3" opacity="0.6"/>
+              <g stroke="#e0b43f" stroke-width="2" stroke-linecap="round"><line x1="194" y1="56" x2="201" y2="56"/><line x1="194" y1="70" x2="201" y2="70"/><line x1="194" y1="84" x2="201" y2="84"/></g>
+            </svg>
+          </div>
+          <div class="bar"></div>
+          <h1 class="title">뇌와 컴퓨터를<br>잇는 사람들</h1>
+          <p class="sub">BCI 연구실 대학원생 3인에게<br>‘연구자의 길’을 묻다</p>
+        </div>
+        <p class="by">신겸재 · 류현우 기자</p>
+      </div>
+
+      <div class="card card--lead">
+        <div class="card-top"><span class="tag">여는 글</span><span class="pg">2 / 18</span></div>
+        <div class="card-body"><p class="bd">“뇌로 기계를 움직인다.” 공상과학 영화에서나 보던 장면이 지금 국내 대학 연구실에서 현실이 되고 있다. 뇌-컴퓨터 인터페이스(BCI)는 뇌의 전기 신호를 읽어 컴퓨터나 기계를 제어하고, 거꾸로 뇌에 신호를 전달하는 기술이다. 연구직을 꿈꾸는 학우들을 위해 BCI 연구실의 세 대학원생의 이야기를 전한다.</p></div>
+      </div>
+
+      <div class="card card--people">
+        <div class="card-top"><span class="tag">만난 사람들</span><span class="pg">3 / 18</span></div>
+        <div class="card-body"><ul class="plist">
+          <li><span class="pn">심○○</span><span class="pa">UNIST 바이오메디컬공학과</span></li>
+          <li><span class="pn">허○○</span><span class="pa">고려대학교 뇌공학과</span></li>
+          <li><span class="pn">이○○</span><span class="pa">UNIST 바이오메디컬공학과</span></li>
+        </ul></div>
+        <p class="note">실제로 BCI를 연구하는 세 대학원생</p>
+      </div>
+
+      <div class="card card--hada">
+        <div class="card-top"><span class="tag">하루 ①</span><span class="pg">4 / 18</span></div>
+        <div class="card-body"><h2 class="hl">연구실의 하루는 ‘실험’이 아니다</h2><p class="bd">세 연구자에게 먼저 연구자의 하루를 물었다. 이○○ 대학원생은 “BCI 연구라고 해서 매일 뇌 신호를 기록하거나 실험하는 것만은 아니다”라며 동료와 논의하는 시간도 많다고 했다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--hada">
+        <div class="card-top"><span class="tag">하루 ②</span><span class="pg">5 / 18</span></div>
+        <div class="card-body"><h2 class="hl">장비부터 직접 만든다</h2><p class="bd">구체적으로 들여다보면 하루는 더 ‘손에 잡히는’ 일로 채워진다. 심○○ 대학원생은 실험이 필요하면 장비부터 직접 만든다. 필요한 하드웨어를 사서 납땜으로 회로를 잇고, 구동이 되는지 확인한 뒤, 코딩으로 기능을 구현한다. 뇌 신호를 다루기 전에 그 신호를 얻을 장치부터 만드는 일이 하루의 큰 부분을 차지한다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--hada">
+        <div class="card-top"><span class="tag">하루 ③</span><span class="pg">6 / 18</span></div>
+        <div class="card-body"><h2 class="hl">데이터 구하기도 쉽지 않다</h2><p class="bd">데이터를 구하는 일도 간단치 않다. 허○○ 대학원생에 따르면 연구실은 실험으로 데이터를 모으는 ‘웻랩’과 컴퓨터로 분석하는 ‘드라이랩’으로 나뉘는데, 특히 직접 실험을 하지 않는 드라이랩에서는 개인이 데이터를 확보하기 어려워, 공개 데이터를 쓰거나 지도교수가 수주한 과제, 외부에서 의뢰받은 분석을 통해 데이터를 얻는 경우가 많다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--hada">
+        <div class="card-top"><span class="tag">하루 ④</span><span class="pg">7 / 18</span></div>
+        <div class="card-body"><h2 class="hl">스스로 공부하는 방식</h2><p class="bd">심○○ 대학원생은 상상과 가장 달랐던 점으로 ‘스스로 공부하는 방식’을 꼽았다. 교재나 선생님 없이, 전 세계에서 조금씩 쌓이는 논문을 스스로 정리하고 아직 밝혀지지 않은 부분을 찾아 검증하는 것이 연구라는 얘기다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--hada">
+        <div class="card-top"><span class="tag">하루 ⑤</span><span class="pg">8 / 18</span></div>
+        <div class="card-body"><h2 class="hl">지도교수 중심의 연구</h2><p class="bd">허○○ 대학원생은 대학원 생활이 개인 연구만이 아니라 지도교수가 수주한 연구과제와 연구실 운영까지 포함되며, 실제로는 지도교수의 관심 분야를 주로 연구하게 된다는 점이 예상과 다르다고 짚었다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--junbi">
+        <div class="card-top"><span class="tag">준비 ①</span><span class="pg">9 / 18</span></div>
+        <div class="card-body"><h2 class="hl">정해진 전공은 없다</h2><p class="bd">세 연구자는 한목소리로 ‘BCI에 정해진 하나의 전공은 없다’고 답했다. 뇌 신호를 분석하는 인공지능 쪽에 끌리면 컴퓨터공학, 전기전자공학이, 뇌의 작동 원리에 끌리면 뇌과학, 생명과학이 출발점이 될 수 있다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--junbi">
+        <div class="card-top"><span class="tag">준비 ②</span><span class="pg">10 / 18</span></div>
+        <div class="card-body"><h2 class="hl">어디로 진학할까</h2><p class="bd">허○○ 대학원생은 KAIST, DGIST처럼 뇌공학 관련 학부로 진학하거나 생명공학을 거쳐 컴퓨터공학을 복수전공하는 길을 추천하면서도, ‘전혀 다른 분야에서 넘어오는 사람도 많으니 학부 전공에 너무 얽매일 필요는 없다’고 했다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--junbi">
+        <div class="card-top"><span class="tag">준비 ③</span><span class="pg">11 / 18</span></div>
+        <div class="card-body"><h2 class="hl">공통 ‘기초 체력’</h2><p class="bd">공통적으로 강조된 기초 체력은 신호처리, 프로그래밍, 수학·통계, 그리고 뇌·신경계 기초였다. 고등학생에게는 학교 수학·과학을 충실히 하면서 가능하면 파이썬으로 데이터를 다루고 그래프를 그려 보는 것부터 시작하라고 권했다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--junbi">
+        <div class="card-top"><span class="tag">준비 ④</span><span class="pg">12 / 18</span></div>
+        <div class="card-body"><h2 class="hl">AI 시대일수록 ‘사람의 검증’</h2><p class="bd">심○○ 대학원생은 관심 있는 연구를 하는 교수를 논문으로 먼저 찾아보라고 조언했고, 허○○ 대학원생은 ‘인공지능이 코딩, 분석을 잘해도 연구에는 사람의 검증이 필수’라며 미래의 연구 환경을 스스로 고민해 보라고 당부했다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--gyegi">
+        <div class="card-top"><span class="tag">계기 ①</span><span class="pg">13 / 18</span></div>
+        <div class="card-body"><h2 class="hl">거창하지 않은 시작</h2><p class="bd">세 사람이 연구자의 길로 들어선 계기는 거창하지 않았다. 심○○ 대학원생은 어릴 때부터 연구를, 특히 BCI를 직접 만들어 보고 싶었고, 그것을 마냥 기다리기엔 너무 오래 걸릴 것 같아 직접 뛰어들었다고 했다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--gyegi">
+        <div class="card-top"><span class="tag">계기 ②</span><span class="pg">14 / 18</span></div>
+        <div class="card-body"><h2 class="hl">어릴 적 호기심에서</h2><p class="bd">이○○ 대학원생은 처음부터 대학원을 목표한 것은 아니었다고 말한다. 다만 뇌가 어떻게 작동하는지, 우리가 생각하는 과정과 실제 뇌의 활동이 어떻게 연결되는지, 그 관계를 우리가 이해할 수 있는 방식으로 표현할 수 있는지가 어릴 때부터 궁금했고, BCI 연구실 인턴을 거치며 흥미를 키워 진학을 택했다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--gyegi">
+        <div class="card-top"><span class="tag">계기 ③</span><span class="pg">15 / 18</span></div>
+        <div class="card-body"><h2 class="hl">가설이 현실이 되는 순간</h2><p class="bd">가장 즐거운 순간으로는 ‘가설이 현실이 되는 장면’이 공통으로 꼽혔다. 이○○ 대학원생은 자신이 세운 가설을 뒷받침하는 결과를 데이터 분석에서 발견했을 때, 또 여러 분석 결과를 연결해 연구 질문에 논리적으로 답할 수 있게 되었을 때를 꼽았다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--gyegi">
+        <div class="card-top"><span class="tag">계기 ④</span><span class="pg">16 / 18</span></div>
+        <div class="card-body"><h2 class="hl">상상이 현실이 될 때</h2><p class="bd">심○○ 대학원생은 전기 자극으로 손에 원하는 촉감을 만들어 내는 자신의 연구를 VR로 확인하거나 직접 구현하면서, 상상만 하던 연구가 실제로 가능해지고, 뭔가 되어 간다는 것을 눈으로 확인할 때가 즐겁다고 했다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--gyegi">
+        <div class="card-top"><span class="tag">계기 ⑤</span><span class="pg">17 / 18</span></div>
+        <div class="card-body"><h2 class="hl">유망하지만, 남은 과제</h2><p class="bd">허○○ 대학원생은 특별한 계기는 없었지만 연구가 잘 진행되어 좋은 결과가 나올 때 보람을 느낀다고 담담하게 답했다. 그는 BCI가 아직 개척할 부분이 많은 유망한 분야이지만, 상용화의 핵심인 비침습 뇌파는 두개골과 두피를 지나며 정보가 손실돼 기술적으로 풀어야 할 과제가 많다는 점도 지적했다.</p></div>
+        <p class="card-foot">과학신문 · BCI 연구자 인터뷰</p>
+      </div>
+
+      <div class="card card--outro">
+        <div class="card-top"><span class="tag" style="background:#e0b43f;color:#14171c;">맺음</span><span class="pg">18 / 18</span></div>
+        <div class="card-body">
+          <div class="bar"></div>
+          <p class="bd">“BCI에 관심이 생겼다면, 관련 기술이 실제로 어느 정도 수준에 와 있는지 먼저 찾아보라.” — 세 대학원생이 후배들에게 건넨 조언이다.</p>
+          <p class="cred">과학신문 · 진로 인터뷰 &nbsp;│&nbsp; 신겸재 · 류현우 기자</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="made">본 문서는 클로드 코드로 제작되었습니다.</footer>
+
+  <script>
+    function showView(v){
+      var doc=document.getElementById('doc-view'),cards=document.getElementById('cards-view');
+      var bd=document.getElementById('btn-doc'),bc=document.getElementById('btn-cards');
+      if(v==='cards'){
+        cards.classList.remove('hidden');doc.classList.add('hidden');
+        bc.classList.add('active');bd.classList.remove('active');
+        document.body.style.background='#d9d6cd';
+      }else{
+        doc.classList.remove('hidden');cards.classList.add('hidden');
+        bd.classList.add('active');bc.classList.remove('active');
+        document.body.style.background='';
+      }
+      window.scrollTo(0,0);
+    }
+  </script>
+</body>
+</html>
